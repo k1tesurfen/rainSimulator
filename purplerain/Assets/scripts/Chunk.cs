@@ -1,52 +1,36 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-[RequireComponent(typeof(MeshFilter))]
-[RequireComponent(typeof(MeshRenderer))]
-public class ChunkGenerator: MonoBehaviour
+public class Chunk : MonoBehaviour
 {
-
-    private Mesh mesh;
-    public float size = 10f;
-    [Range(0f, 10f)]
-    public float angle;
-
     private Vector3[] oldVertices;
     private Vector2[] oldUV;
     private int[] oldTriangles;
 
-    void Start()
-    {
-        GenerateCube();
-        
-    }
-
-    public void Update()
+    public void UpdateChunk(Mesh mesh, float size, float angle)
     {
         oldVertices = mesh.vertices;
         oldUV = mesh.uv;
         oldTriangles = mesh.triangles;
 
-        Debug.Log(GetHeightFromAngle(angle));
-        oldVertices[2] = new Vector3(size, size + GetHeightFromAngle(angle), 0);
-        oldVertices[9] = new Vector3(size, size + GetHeightFromAngle(angle), 0);
-        oldVertices[12] = new Vector3(size, size + GetHeightFromAngle(angle), 0);
+        Debug.Log(GetHeightFromAngle(angle, size));
+        oldVertices[2] = new Vector3(size, size + GetHeightFromAngle(angle, size), 0);
+        oldVertices[9] = new Vector3(size, size + GetHeightFromAngle(angle, size), 0);
+        oldVertices[12] = new Vector3(size, size + GetHeightFromAngle(angle, size), 0);
 
-        oldVertices[0] = new Vector3(0, size + GetHeightFromAngle(angle), 0);
-        oldVertices[8] = new Vector3(0, size + GetHeightFromAngle(angle), 0);
-        oldVertices[10] = new Vector3(0, size + GetHeightFromAngle(angle), 0);
+        oldVertices[0] = new Vector3(0, size + GetHeightFromAngle(angle, size), 0);
+        oldVertices[8] = new Vector3(0, size + GetHeightFromAngle(angle, size), 0);
+        oldVertices[10] = new Vector3(0, size + GetHeightFromAngle(angle, size), 0);
 
         mesh.Clear();
         mesh.vertices = oldVertices;
         mesh.triangles = oldTriangles;
         mesh.uv = oldUV;
         mesh.RecalculateNormals();
-
     }
 
-    void GenerateCube()
+    public void GenerateChunk(Mesh mesh, float size)
     {
-            Vector3[] vertices = {
+        Vector3[] vertices = {
             new Vector3(0, size, 0),
             new Vector3(0, 0, 0),
             new Vector3(size, size, 0),
@@ -67,7 +51,7 @@ public class ChunkGenerator: MonoBehaviour
             new Vector3(size, size, size),
         };
 
-            int[] triangles = {
+        int[] triangles = {
             0, 2, 1, // front
 			1, 2, 3,
             4, 5, 6, // back
@@ -85,7 +69,7 @@ public class ChunkGenerator: MonoBehaviour
         };
 
 
-            Vector2[] uvs = {
+        Vector2[] uvs = {
             new Vector2(0, 0.6666f),
             new Vector2(0.25f, 0.6666f),
             new Vector2(0, 0.3333f),
@@ -106,16 +90,15 @@ public class ChunkGenerator: MonoBehaviour
             new Vector2(0.5f, 0),
         };
 
-            mesh = GetComponent<MeshFilter>().mesh;
-            mesh.Clear();
-            mesh.vertices = vertices;
-            mesh.triangles = triangles;
-            mesh.uv = uvs;
-            mesh.RecalculateNormals();
+        mesh.Clear();
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;
+        mesh.uv = uvs;
+        mesh.RecalculateNormals();
     }
 
-    private float GetHeightFromAngle(float angle)
+    private float GetHeightFromAngle(float angle, float size)
     {
-        return size / Mathf.Sin((180f - angle - 90f) * Mathf.Deg2Rad)*Mathf.Sin(angle * Mathf.Deg2Rad);
+        return size / Mathf.Sin((180f - angle - 90f) * Mathf.Deg2Rad) * Mathf.Sin(angle * Mathf.Deg2Rad);
     }
 }

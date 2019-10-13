@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7050254309895121768}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5, y: 4.99, z: -5}
+  m_LocalPosition: {x: 0, y: 9.9, z: 0}
   m_LocalScale: {x: 0.99, y: 0.99, z: 0.99}
   m_Children:
   - {fileID: 7050254309335667403}
@@ -102,10 +102,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 3300000, guid: 780611a67e8e941a2b3aa96e5915a793, type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
     - target: {fileID: 11400000, guid: 780611a67e8e941a2b3aa96e5915a793, type: 3}
       propertyPath: textureSize
       value: 256
@@ -122,6 +118,10 @@ PrefabInstance:
       propertyPath: disablePixelLights
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3300000, guid: 780611a67e8e941a2b3aa96e5915a793, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 780611a67e8e941a2b3aa96e5915a793, type: 3}
 --- !u!4 &7050254308237835112 stripped
@@ -197,10 +197,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 3300000, guid: 780611a67e8e941a2b3aa96e5915a793, type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
     - target: {fileID: 11400000, guid: 780611a67e8e941a2b3aa96e5915a793, type: 3}
       propertyPath: textureSize
       value: 256
@@ -217,6 +213,10 @@ PrefabInstance:
       propertyPath: disablePixelLights
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3300000, guid: 780611a67e8e941a2b3aa96e5915a793, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 780611a67e8e941a2b3aa96e5915a793, type: 3}
 --- !u!4 &7050254308280858870 stripped
@@ -292,10 +292,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 3300000, guid: 780611a67e8e941a2b3aa96e5915a793, type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
     - target: {fileID: 11400000, guid: 780611a67e8e941a2b3aa96e5915a793, type: 3}
       propertyPath: textureSize
       value: 256
@@ -312,6 +308,10 @@ PrefabInstance:
       propertyPath: disablePixelLights
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3300000, guid: 780611a67e8e941a2b3aa96e5915a793, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 780611a67e8e941a2b3aa96e5915a793, type: 3}
 --- !u!4 &7050254309112094130 stripped
@@ -387,10 +387,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 3300000, guid: 780611a67e8e941a2b3aa96e5915a793, type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
     - target: {fileID: 11400000, guid: 780611a67e8e941a2b3aa96e5915a793, type: 3}
       propertyPath: textureSize
       value: 256
@@ -407,6 +403,10 @@ PrefabInstance:
       propertyPath: disablePixelLights
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3300000, guid: 780611a67e8e941a2b3aa96e5915a793, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 780611a67e8e941a2b3aa96e5915a793, type: 3}
 --- !u!4 &7050254309335667403 stripped
@@ -482,10 +482,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 3300000, guid: 780611a67e8e941a2b3aa96e5915a793, type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
     - target: {fileID: 11400000, guid: 780611a67e8e941a2b3aa96e5915a793, type: 3}
       propertyPath: textureSize
       value: 256
@@ -502,6 +498,10 @@ PrefabInstance:
       propertyPath: disablePixelLights
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3300000, guid: 780611a67e8e941a2b3aa96e5915a793, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 780611a67e8e941a2b3aa96e5915a793, type: 3}
 --- !u!4 &7050254309543071232 stripped

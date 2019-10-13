@@ -77,9 +77,9 @@ public class SzenarioSelector : MonoBehaviour
         }
     }
 
-    public float Ramp(float x)
+    private float Ramp(float x)
     {
-        float ret = (Mathf.Atan((3*x) - 1.5f)+1)/2f;
+        float ret = (Mathf.Atan((3 * x) - 1.5f) + 1) / 2f;
         return ret;
     }
 
