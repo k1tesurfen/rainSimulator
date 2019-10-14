@@ -6,23 +6,37 @@ public class Chunk : MonoBehaviour
     private Vector2[] oldUV;
     private int[] oldTriangles;
 
+    private float defaultHeight = 10f;
+
     public void UpdateChunk(Mesh mesh, float size, float angle)
     {
         oldVertices = mesh.vertices;
         oldUV = mesh.uv;
         oldTriangles = mesh.triangles;
 
-        Debug.Log(GetHeightFromAngle(angle, size));
-        oldVertices[2] = new Vector3(size, size + GetHeightFromAngle(angle, size), 0);
-        oldVertices[9] = new Vector3(size, size + GetHeightFromAngle(angle, size), 0);
-        oldVertices[12] = new Vector3(size, size + GetHeightFromAngle(angle, size), 0);
+        Vector3[] vertices = {
+            new Vector3(0, defaultHeight + GetHeightFromAngle(angle, size), 0),
+            new Vector3(0, 0, 0),
+            new Vector3(size, defaultHeight + GetHeightFromAngle(angle, size), 0),
+            new Vector3(size, 0, 0),
 
-        oldVertices[0] = new Vector3(0, size + GetHeightFromAngle(angle, size), 0);
-        oldVertices[8] = new Vector3(0, size + GetHeightFromAngle(angle, size), 0);
-        oldVertices[10] = new Vector3(0, size + GetHeightFromAngle(angle, size), 0);
+            new Vector3(0, 0, size),
+            new Vector3(size, 0, size),
+            new Vector3(0, defaultHeight, size),
+            new Vector3(size, defaultHeight, size),
+
+            new Vector3(0, defaultHeight+ GetHeightFromAngle(angle, size), 0),
+            new Vector3(size, defaultHeight+ GetHeightFromAngle(angle, size), 0),
+
+            new Vector3(0, defaultHeight+ GetHeightFromAngle(angle, size), 0),
+            new Vector3(0, defaultHeight, size),
+
+            new Vector3(size, defaultHeight+ GetHeightFromAngle(angle, size), 0),
+            new Vector3(size, defaultHeight, size),
+        };
 
         mesh.Clear();
-        mesh.vertices = oldVertices;
+        mesh.vertices = vertices;
         mesh.triangles = oldTriangles;
         mesh.uv = oldUV;
         mesh.RecalculateNormals();

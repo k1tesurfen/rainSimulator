@@ -1,21 +1,19 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
-public class Seepage : MonoBehaviour, ISzenario
+public class TestSzenario : MonoBehaviour, ISzenario
 {
-
     public GameManager gm;
-    public GameObject water;
-    bool inSpotlight = true;
     MeshFilter meshFilter;
+    bool inSpotlight = false;
 
-    [Range(0, 10)]
-    public float angle;
+    private float angle;
 
     // Start is called before the first frame update
     void Start()
     {
-        gameObject.layer = LayerMask.NameToLayer("Spotlight");
+        gameObject.layer = LayerMask.NameToLayer("Default");
         meshFilter = GetComponent<MeshFilter>();
         gm.chunk.GenerateChunk(meshFilter.mesh, gm.chunkSize);
     }
@@ -27,7 +25,6 @@ public class Seepage : MonoBehaviour, ISzenario
         {
             gm.chunk.UpdateChunk(meshFilter.mesh, gm.chunkSize, angle);
             Simulate(gm.time.GetTime());
-            water.transform.position = new Vector3(water.transform.position.x, water.transform.position.y + 0.01f * Time.deltaTime, water.transform.position.z);
         }
     }
 
@@ -35,6 +32,7 @@ public class Seepage : MonoBehaviour, ISzenario
     {
         this.angle = angle;
     }
+
 
     public void InSpotlight(bool state)
     {
@@ -53,5 +51,4 @@ public class Seepage : MonoBehaviour, ISzenario
     {
 
     }
-
 }

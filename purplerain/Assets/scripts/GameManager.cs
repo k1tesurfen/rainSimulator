@@ -7,6 +7,9 @@ public class GameManager : MonoBehaviour
     public Chunk chunk;
     public Zeitgeber time;
 
+
+    public float chunkSize;
+
     // Start is called before the first frame update
     void Start()
     {

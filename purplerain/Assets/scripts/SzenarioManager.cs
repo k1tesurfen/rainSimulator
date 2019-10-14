@@ -2,8 +2,8 @@
 
 public class SzenarioManager : MonoBehaviour
 {
-    public GameObject seepage;
-    public ISzenario[] szenarios = new ISzenario[4];
+    public GameManager gm;
+    public GameObject[] szenarios = new GameObject[4];
 
     public enum State
     {
@@ -13,7 +13,7 @@ public class SzenarioManager : MonoBehaviour
     }
 
     Camera cam;
-    private int slot = 0;
+    public int slot = 0;
     public State state = State.Stationary;
     public float animationDuration;
     private Vector3 cameraHeight;
@@ -24,19 +24,20 @@ public class SzenarioManager : MonoBehaviour
 
     public void Start()
     {
-        szenarios[0] = seepage.GetComponent<ISzenario>();
         timer = 0f;
         cam = Camera.main;
+        cam.transform.position = new Vector3(-gm.chunkSize * 3, gm.chunkSize * 2, -gm.chunkSize * 3);
         cameraHeight = new Vector3(0f, cam.transform.position.y, 0f);
         cam.transform.LookAt(Vector3.zero);
     }
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        //cam.transform.position = new Vector3(-gm.chunkSize * 3, gm.chunkSize * 2, -gm.chunkSize * 3);
+        if (Input.GetKeyDown(KeyCode.LeftArrow) && state == State.Stationary)
         {
             state = State.MovingPrevious;
         }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        else if (Input.GetKeyDown(KeyCode.RightArrow) && state == State.Stationary)
         {
             state = State.MovingNext;
         }
@@ -44,9 +45,23 @@ public class SzenarioManager : MonoBehaviour
         {
             if (beginOfAnimation)
             {
+                slot = Mod(slot + 1, 4);
+                cameraHeight = new Vector3(0, cam.transform.position.y, 0);
                 startingPosition = new Vector3(cam.transform.position.x, 0f, cam.transform.position.z);
                 endPosition = Quaternion.Euler(new Vector3(0f, -90f, 0f)) * startingPosition;
                 beginOfAnimation = false;
+                if (szenarios[slot] != null)
+                {
+                    ISzenario currentSzenario = szenarios[slot].GetComponent(typeof(ISzenario)) as ISzenario;
+                    currentSzenario.InSpotlight(true);
+                }
+                int previousSlot = Mod(slot - 1, 4);
+                if (szenarios[previousSlot] != null)
+                {
+                    ISzenario previousSzenario = szenarios[previousSlot].GetComponent(typeof(ISzenario)) as ISzenario;
+                    previousSzenario.InSpotlight(false);
+
+                }
             }
             if (timer > animationDuration)
             {
@@ -54,19 +69,10 @@ public class SzenarioManager : MonoBehaviour
                 timer = 0;
                 state = State.Stationary;
                 beginOfAnimation = true;
-                ISzenario currentSzenario = szenarios[slot];
-                ISzenario previousSzenario = szenarios[(slot -1) % 4];
-                if (currentSzenario != null)
-                {
-                    currentSzenario.InSpotlight(true);
-                }
-                if (previousSzenario != null)
-                {
-                    previousSzenario.InSpotlight(false);
-                }
+
                 return;
             }
-            cam.transform.position = cameraHeight + Vector3.Slerp(startingPosition, endPosition, Mathf.SmoothStep(0f, 1f, timer/animationDuration));
+            cam.transform.position = cameraHeight + Vector3.Slerp(startingPosition, endPosition, Mathf.SmoothStep(0f, 1f, timer / animationDuration));
             cam.transform.LookAt(Vector3.zero);
             timer += Time.deltaTime;
         }
@@ -74,9 +80,23 @@ public class SzenarioManager : MonoBehaviour
         {
             if (beginOfAnimation)
             {
-                startingPosition = new Vector3(transform.position.x, 0f, transform.position.z);
+                cameraHeight = new Vector3(0, cam.transform.position.y, 0);
+                slot = Mod((slot - 1), 4);
+                startingPosition = new Vector3(cam.transform.position.x, 0f, cam.transform.position.z);
                 endPosition = Quaternion.Euler(new Vector3(0f, 90f, 0f)) * startingPosition;
                 beginOfAnimation = false;
+                if (szenarios[slot] != null)
+                {
+                    ISzenario currentSzenario = szenarios[slot].GetComponent(typeof(ISzenario)) as ISzenario;
+                    currentSzenario.InSpotlight(true);
+                }
+                int previousSlot = Mod(slot + 1, 4);
+                if (szenarios[previousSlot] != null)
+                {
+                    ISzenario previousSzenario = szenarios[previousSlot].GetComponent(typeof(ISzenario)) as ISzenario;
+                    previousSzenario.InSpotlight(false);
+
+                }
             }
             if (timer > animationDuration)
             {
@@ -84,19 +104,10 @@ public class SzenarioManager : MonoBehaviour
                 timer = 0;
                 state = State.Stationary;
                 beginOfAnimation = true;
-                ISzenario currentSzenario = szenarios[slot];
-                ISzenario previousSzenario = szenarios[(slot +1) % 4];
-                if (currentSzenario != null)
-                {
-                    currentSzenario.InSpotlight(true);
-                }
-                if (previousSzenario != null)
-                {
-                    previousSzenario.InSpotlight(false);
-                }
+                Debug.Log("slot after animation: " + slot);
                 return;
             }
-            cam.transform.position = cameraHeight + Vector3.Slerp(startingPosition, endPosition, Mathf.SmoothStep(0f, 1f, timer/animationDuration));
+            cam.transform.position = cameraHeight + Vector3.Slerp(startingPosition, endPosition, Mathf.SmoothStep(0f, 1f, timer / animationDuration));
             cam.transform.LookAt(Vector3.zero);
             timer += Time.deltaTime;
         }
@@ -111,12 +122,22 @@ public class SzenarioManager : MonoBehaviour
     public void Next()
     {
         state = State.MovingNext;
-        slot = (slot + 1) % 4;
+        slot = Mod((slot + 1), 4);
     }
 
     public void Previous()
     {
         state = State.MovingPrevious;
-        slot = (slot - 1) % 4;
+        slot = Mod((slot - 1), 4);
+    }
+
+    int Mod(int a, int n)
+    {
+        int result = a % n;
+        if ((result < 0 && n > 0) || (result > 0 && n < 0))
+        {
+            result += n;
+        }
+        return result;
     }
 }
