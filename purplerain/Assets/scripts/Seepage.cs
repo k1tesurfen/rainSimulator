@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class Seepage : MonoBehaviour, ISzenario
 {
 
     public GameManager gm;
     public GameObject water;
+
+    private GameObject[] chunk;
+
     bool inSpotlight = true;
-    MeshFilter meshFilter;
 
     [Range(0, 10)]
     public float angle;
@@ -15,9 +16,11 @@ public class Seepage : MonoBehaviour, ISzenario
     // Start is called before the first frame update
     void Start()
     {
-        gameObject.layer = LayerMask.NameToLayer("Spotlight");
-        meshFilter = GetComponent<MeshFilter>();
-        gm.chunk.GenerateChunk(meshFilter.mesh, gm.chunkSize);
+        chunk = gm.chunk.GenerateChunk(gameObject);
+        foreach(GameObject face in chunk)
+        {
+            face.layer = LayerMask.NameToLayer("Spotlight");
+        }
     }
 
     // Update is called once per frame
@@ -25,10 +28,11 @@ public class Seepage : MonoBehaviour, ISzenario
     {
         if (inSpotlight)
         {
-            gm.chunk.UpdateChunk(meshFilter.mesh, gm.chunkSize, angle);
             Simulate(gm.time.GetTime());
             water.transform.position = new Vector3(water.transform.position.x, water.transform.position.y + 0.01f * Time.deltaTime, water.transform.position.z);
         }
+        gm.chunk.UpdateChunk(chunk);
+        transform.position = new Vector3(-gm.chunkSize / 2, 0f, -gm.chunkSize / 2);
     }
 
     public void SetAnlge(float angle)
@@ -41,11 +45,17 @@ public class Seepage : MonoBehaviour, ISzenario
         inSpotlight = state;
         if (state)
         {
-            gameObject.layer = LayerMask.NameToLayer("Spotlight");
+            foreach(GameObject face in chunk)
+            {
+                face.layer = LayerMask.NameToLayer("Spotlight");
+            }
         }
         else
         {
-            gameObject.layer = LayerMask.NameToLayer("Default");
+            foreach(GameObject face in chunk)
+            {
+                face.layer = LayerMask.NameToLayer("Default");
+            }
         }
     }
 

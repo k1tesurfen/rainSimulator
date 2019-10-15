@@ -15,7 +15,7 @@ public class TestSzenario : MonoBehaviour, ISzenario
     {
         gameObject.layer = LayerMask.NameToLayer("Default");
         meshFilter = GetComponent<MeshFilter>();
-        gm.chunk.GenerateChunk(meshFilter.mesh, gm.chunkSize);
+        gm.chunk.GenerateChunk(gameObject);
     }
 
     // Update is called once per frame
@@ -23,7 +23,7 @@ public class TestSzenario : MonoBehaviour, ISzenario
     {
         if (inSpotlight)
         {
-            gm.chunk.UpdateChunk(meshFilter.mesh, gm.chunkSize, angle);
+        //    gm.chunk.UpdateChunk(meshFilter.mesh, gm.chunkSize, angle);
             Simulate(gm.time.GetTime());
         }
     }

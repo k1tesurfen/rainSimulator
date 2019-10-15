@@ -2,113 +2,146 @@
 
 public class Chunk : MonoBehaviour
 {
-    private Vector3[] oldVertices;
-    private Vector2[] oldUV;
-    private int[] oldTriangles;
+    public GameManager gm;
+
+    public Material gras;
+    public Material dirt;
 
     private float defaultHeight = 10f;
 
-    public void UpdateChunk(Mesh mesh, float size, float angle)
+    public GameObject[] GenerateChunk(GameObject parent)
     {
-        oldVertices = mesh.vertices;
-        oldUV = mesh.uv;
-        oldTriangles = mesh.triangles;
+        GameObject north = GenerateFace("North", parent.transform, dirt, gm.chunkSize, false);
+        north.transform.rotation = Quaternion.Euler(new Vector3(90, 0, 180));
+        north.transform.localPosition = new Vector3(0f, 0f, gm.chunkSize / 2);
 
-        Vector3[] vertices = {
-            new Vector3(0, defaultHeight + GetHeightFromAngle(angle, size), 0),
-            new Vector3(0, 0, 0),
-            new Vector3(size, defaultHeight + GetHeightFromAngle(angle, size), 0),
-            new Vector3(size, 0, 0),
+        GameObject south = GenerateFace("South", parent.transform, dirt, gm.chunkSize, false);
+        south.transform.rotation = Quaternion.Euler(new Vector3(-90, 0, 180));
+        south.transform.localPosition = new Vector3(0f, 0f, -gm.chunkSize / 2);
 
-            new Vector3(0, 0, size),
-            new Vector3(size, 0, size),
-            new Vector3(0, defaultHeight, size),
-            new Vector3(size, defaultHeight, size),
+        GameObject east = GenerateFace("East", parent.transform, dirt, gm.chunkSize, false);
+        east.transform.rotation = Quaternion.Euler(new Vector3(90, 0, 90));
+        east.transform.localPosition = new Vector3(gm.chunkSize / 2, 0f, 0f);
 
-            new Vector3(0, defaultHeight+ GetHeightFromAngle(angle, size), 0),
-            new Vector3(size, defaultHeight+ GetHeightFromAngle(angle, size), 0),
+        GameObject west = GenerateFace("West", parent.transform, dirt, gm.chunkSize, false);
+        west.transform.rotation = Quaternion.Euler(new Vector3(90, 0, -90));
+        west.transform.localPosition = new Vector3(-gm.chunkSize / 2, 0f, 0f);
 
-            new Vector3(0, defaultHeight+ GetHeightFromAngle(angle, size), 0),
-            new Vector3(0, defaultHeight, size),
+        GameObject top = GenerateFace("Top", parent.transform, gras, gm.chunkSize, true);
+        top.transform.localPosition = new Vector3(0f, 5f, 0f);
 
-            new Vector3(size, defaultHeight+ GetHeightFromAngle(angle, size), 0),
-            new Vector3(size, defaultHeight, size),
-        };
+        GameObject[] chunk = { north, south, east, west, top };
 
-        mesh.Clear();
-        mesh.vertices = vertices;
-        mesh.triangles = oldTriangles;
-        mesh.uv = oldUV;
-        mesh.RecalculateNormals();
+        return chunk;
     }
 
-    public void GenerateChunk(Mesh mesh, float size)
+    private GameObject GenerateFace(string name, Transform parent, Material mat, float size, bool top)
     {
-        Vector3[] vertices = {
-            new Vector3(0, size, 0),
-            new Vector3(0, 0, 0),
-            new Vector3(size, size, 0),
-            new Vector3(size, 0, 0),
+        GameObject face = new GameObject(name);
+        face.transform.parent = parent;
+        MeshFilter meshFilter = face.AddComponent<MeshFilter>();
+        MeshRenderer meshRenderer = face.AddComponent<MeshRenderer>();
+        meshRenderer.material = mat;
 
-            new Vector3(0, 0, size),
-            new Vector3(size, 0, size),
-            new Vector3(0, size, size),
-            new Vector3(size, size, size),
+        Mesh mesh = meshFilter.mesh;
 
-            new Vector3(0, size, 0),
-            new Vector3(size, size, 0),
+        Vector3[] vertices;
+        if (top)
+        {
+            vertices = new Vector3[]{
+                 new Vector3(-size/2, 0, size/2),
+                 new Vector3(-size/2, 0, -size/2),
+                 new Vector3(size/2, 0, size/2),
+                 new Vector3(size/2, 0, -size/2),
+            };
 
-            new Vector3(0, size, 0),
-            new Vector3(0, size, size),
+        }
+        else
+        {
+            vertices = new Vector3[]{
+                 new Vector3(-size/2, 0, 5f),
+                 new Vector3(-size/2, 0, -5f),
+                 new Vector3(size/2, 0, 5f),
+                 new Vector3(size/2, 0, -5f),
+            };
+        }
 
-            new Vector3(size, size, 0),
-            new Vector3(size, size, size),
-        };
 
         int[] triangles = {
-            0, 2, 1, // front
-			1, 2, 3,
-            4, 5, 6, // back
-			5, 7, 6,
-            6, 7, 8, //top
-			7, 9 ,8,
-            1, 3, 4, //bottom
-			3, 5, 4,
-            1, 11,10,// left
-			1, 4, 11,
-            3, 12, 5,//right
-			5, 12, 13
-
-
+        0, 2, 1, // front
+        1, 2, 3,
         };
 
-
-        Vector2[] uvs = {
-            new Vector2(0, 0.6666f),
-            new Vector2(0.25f, 0.6666f),
-            new Vector2(0, 0.3333f),
-            new Vector2(0.25f, 0.3333f),
-
-            new Vector2(0.5f, 0.6666f),
-            new Vector2(0.5f, 0.3333f),
-            new Vector2(0.75f, 0.6666f),
-            new Vector2(0.75f, 0.3333f),
-
-            new Vector2(1, 0.6666f),
-            new Vector2(1, 0.3333f),
-
-            new Vector2(0.25f, 1),
-            new Vector2(0.5f, 1),
-
-            new Vector2(0.25f, 0),
-            new Vector2(0.5f, 0),
+        Vector2[] uvs =
+        {
+            new Vector2(0,1),
+            new Vector2(0,0),
+            new Vector2(1,1),
+            new Vector2(1,0)
         };
+
 
         mesh.Clear();
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.uv = uvs;
         mesh.RecalculateNormals();
+
+        return face;
+    }
+
+    public void UpdateChunk(GameObject[] faces)
+    {
+        for(int i=0; i<5;i++){
+            UpdateFace(faces[i], gm.chunkSize, false);
+            faces[i].GetComponent<MeshRenderer>().material.SetTextureScale("_MainTex", new Vector2(gm.chunkSize / 2, gm.chunkSize / 2));
+        }
+        //top face must be updated as square.
+        UpdateFace(faces[4], gm.chunkSize, true);
+        faces[3].GetComponent<MeshRenderer>().material.SetTextureScale("_MainTex", new Vector2(gm.chunkSize / 2, gm.chunkSize / 2));
+
+        faces[0].transform.localPosition = new Vector3(0f, 0f, gm.chunkSize / 2);
+        faces[1].transform.localPosition = new Vector3(0f, 0f, -gm.chunkSize / 2);
+        faces[2].transform.localPosition = new Vector3(gm.chunkSize / 2, 0f, 0f);
+        faces[3].transform.localPosition = new Vector3(-gm.chunkSize / 2, 0f, 0f);
+        faces[4].transform.localPosition = new Vector3(0f, 5f, 0f);
+
+    }
+
+    private GameObject UpdateFace(GameObject face, float size, bool top)
+    {
+
+        Mesh mesh = face.GetComponent<MeshFilter>().mesh;
+
+        Vector3[] vertices;
+        if (top)
+        {
+            vertices = new Vector3[]{
+                 new Vector3(-size/2, 0, size/2),
+                 new Vector3(-size/2, 0, -size/2),
+                 new Vector3(size/2, 0, size/2),
+                 new Vector3(size/2, 0, -size/2),
+            };
+        }
+        else
+        {
+            vertices = new Vector3[]{
+                 new Vector3(-size/2, 0, 5f),
+                 new Vector3(-size/2, 0, -5f),
+                 new Vector3(size/2, 0, 5f),
+                 new Vector3(size/2, 0, -5f),
+            };
+        }
+        int[] oldTriangles = mesh.triangles;
+        Vector2[] oldUvs = mesh.uv;
+
+        mesh.Clear();
+        mesh.vertices = vertices;
+        mesh.triangles = oldTriangles;
+        mesh.uv = oldUvs;
+        mesh.RecalculateNormals();
+
+        return face;
     }
 
     private float GetHeightFromAngle(float angle, float size)

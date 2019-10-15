@@ -26,13 +26,13 @@ public class SzenarioManager : MonoBehaviour
     {
         timer = 0f;
         cam = Camera.main;
-        cam.transform.position = new Vector3(-gm.chunkSize * 3, gm.chunkSize * 2, -gm.chunkSize * 3);
+        cam.transform.position = new Vector3(-gm.chunkSize * 2.5f, gm.chunkSize * 1.5f, -gm.chunkSize * 2.5f);
         cameraHeight = new Vector3(0f, cam.transform.position.y, 0f);
         cam.transform.LookAt(Vector3.zero);
     }
     public void Update()
     {
-        //cam.transform.position = new Vector3(-gm.chunkSize * 3, gm.chunkSize * 2, -gm.chunkSize * 3);
+        //cam.transform.position = new Vector3(-gm.chunkSize * 2.5f, gm.chunkSize*2, -gm.chunkSize * 2.5f);
         if (Input.GetKeyDown(KeyCode.LeftArrow) && state == State.Stationary)
         {
             state = State.MovingPrevious;
