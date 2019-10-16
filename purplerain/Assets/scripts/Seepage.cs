@@ -13,6 +13,9 @@ public class Seepage : MonoBehaviour, ISzenario
     [Range(0, 10)]
     public float angle;
 
+    [Range(0, 360)]
+    public float rotation;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,6 +24,7 @@ public class Seepage : MonoBehaviour, ISzenario
         {
             face.layer = LayerMask.NameToLayer("Spotlight");
         }
+        transform.rotation = Quaternion.Euler(Vector3.zero);
     }
 
     // Update is called once per frame
@@ -31,8 +35,10 @@ public class Seepage : MonoBehaviour, ISzenario
             Simulate(gm.time.GetTime());
             water.transform.position = new Vector3(water.transform.position.x, water.transform.position.y + 0.01f * Time.deltaTime, water.transform.position.z);
         }
-        gm.chunk.UpdateChunk(chunk);
-        transform.position = new Vector3(-gm.chunkSize / 2, 0f, -gm.chunkSize / 2);
+        gm.chunk.UpdateChunk(chunk, gm.chunk.GetHeightFromAngle(angle, gm.chunkSize), 0);
+        //transform.position = new Vector3(-gm.chunkSize / 2, 0f, -gm.chunkSize / 2);
+
+        transform.rotation = Quaternion.Euler(0f, rotation, 0f);
     }
 
     public void SetAnlge(float angle)

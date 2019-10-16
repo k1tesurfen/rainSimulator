@@ -12,7 +12,7 @@ public class Chunk : MonoBehaviour
     public GameObject[] GenerateChunk(GameObject parent)
     {
         GameObject north = GenerateFace("North", parent.transform, dirt, gm.chunkSize, false);
-        north.transform.rotation = Quaternion.Euler(new Vector3(90, 0, 180));
+        north.transform.rotation = Quaternion.Euler(new Vector3(-90, 0, 0));
         north.transform.localPosition = new Vector3(0f, 0f, gm.chunkSize / 2);
 
         GameObject south = GenerateFace("South", parent.transform, dirt, gm.chunkSize, false);
@@ -20,11 +20,11 @@ public class Chunk : MonoBehaviour
         south.transform.localPosition = new Vector3(0f, 0f, -gm.chunkSize / 2);
 
         GameObject east = GenerateFace("East", parent.transform, dirt, gm.chunkSize, false);
-        east.transform.rotation = Quaternion.Euler(new Vector3(90, 0, 90));
+        east.transform.rotation = Quaternion.Euler(new Vector3(-90, 0, 90));
         east.transform.localPosition = new Vector3(gm.chunkSize / 2, 0f, 0f);
 
         GameObject west = GenerateFace("West", parent.transform, dirt, gm.chunkSize, false);
-        west.transform.rotation = Quaternion.Euler(new Vector3(90, 0, -90));
+        west.transform.rotation = Quaternion.Euler(new Vector3(-90, 0, -90));
         west.transform.localPosition = new Vector3(-gm.chunkSize / 2, 0f, 0f);
 
         GameObject top = GenerateFace("Top", parent.transform, gras, gm.chunkSize, true);
@@ -90,15 +90,54 @@ public class Chunk : MonoBehaviour
         return face;
     }
 
-    public void UpdateChunk(GameObject[] faces)
+    //anglePos is the direction(north, south, east, west), that rises, when the angle gets bigger
+    public void UpdateChunk(GameObject[] faces, float angleHeight, int anglePos)
     {
-        for(int i=0; i<5;i++){
-            UpdateFace(faces[i], gm.chunkSize, false);
-            faces[i].GetComponent<MeshRenderer>().material.SetTextureScale("_MainTex", new Vector2(gm.chunkSize / 2, gm.chunkSize / 2));
+        float[] angleHeightsSide = {angleHeight, 0f, angleHeight, 0f };
+        float[] angleHeightsTop;
+        switch (anglePos)
+        {
+            case 0:
+                //north
+                UpdateFace(faces[0], gm.chunkSize, false, new float[] { angleHeight, 0f, angleHeight, 0f });
+                UpdateFace(faces[1], gm.chunkSize, false, new float[] {0f , 0f, 0f, 0f });
+                UpdateFace(faces[2], gm.chunkSize, false, new float[] { 0f, 0f, angleHeight, 0f});
+                UpdateFace(faces[3], gm.chunkSize, false, new float[] { angleHeight, 0f, 0f, 0f});
+                UpdateFace(faces[4], gm.chunkSize, true, new float[] {0f, angleHeight, 0f, angleHeight });
+                break;
+            case 1:
+                //south
+                angleHeightsTop = new float[] { 0f, angleHeight, 0f, angleHeight };
+                UpdateFace(faces[0], gm.chunkSize, false, angleHeightsSide);
+                UpdateFace(faces[1], gm.chunkSize, false, new float[] { angleHeight, 0f, angleHeight, 0f });
+                UpdateFace(faces[2], gm.chunkSize, false, angleHeightsSide);
+                UpdateFace(faces[3], gm.chunkSize, false, angleHeightsSide);
+                UpdateFace(faces[4], gm.chunkSize, true, angleHeightsTop);
+                break;
+            case 2:
+                //east
+                angleHeightsTop = new float[] { 0f, 0f, angleHeight, angleHeight };
+                UpdateFace(faces[0], gm.chunkSize, false, angleHeightsSide);
+                UpdateFace(faces[1], gm.chunkSize, false, angleHeightsSide);
+                UpdateFace(faces[2], gm.chunkSize, false, angleHeightsSide);
+                UpdateFace(faces[3], gm.chunkSize, false, angleHeightsSide);
+                UpdateFace(faces[4], gm.chunkSize, true, angleHeightsTop);
+                break;
+            case 3:
+                //west
+                angleHeightsTop = new float[] { angleHeight, angleHeight, 0f, 0f };
+                UpdateFace(faces[0], gm.chunkSize, false, angleHeightsSide);
+                UpdateFace(faces[1], gm.chunkSize, false, angleHeightsSide);
+                UpdateFace(faces[2], gm.chunkSize, false, angleHeightsSide);
+                UpdateFace(faces[3], gm.chunkSize, false, angleHeightsSide);
+                UpdateFace(faces[4], gm.chunkSize, true, angleHeightsTop);
+                break;
         }
-        //top face must be updated as square.
-        UpdateFace(faces[4], gm.chunkSize, true);
-        faces[3].GetComponent<MeshRenderer>().material.SetTextureScale("_MainTex", new Vector2(gm.chunkSize / 2, gm.chunkSize / 2));
+
+        foreach (GameObject face in faces)
+        {
+            face.GetComponent<MeshRenderer>().material.SetTextureScale("_MainTex", new Vector2(gm.chunkSize / 2, gm.chunkSize / 2));
+        }
 
         faces[0].transform.localPosition = new Vector3(0f, 0f, gm.chunkSize / 2);
         faces[1].transform.localPosition = new Vector3(0f, 0f, -gm.chunkSize / 2);
@@ -108,7 +147,7 @@ public class Chunk : MonoBehaviour
 
     }
 
-    private GameObject UpdateFace(GameObject face, float size, bool top)
+    private GameObject UpdateFace(GameObject face, float size, bool top, float[] angleHeights)
     {
 
         Mesh mesh = face.GetComponent<MeshFilter>().mesh;
@@ -117,18 +156,18 @@ public class Chunk : MonoBehaviour
         if (top)
         {
             vertices = new Vector3[]{
-                 new Vector3(-size/2, 0, size/2),
-                 new Vector3(-size/2, 0, -size/2),
-                 new Vector3(size/2, 0, size/2),
-                 new Vector3(size/2, 0, -size/2),
+                 new Vector3(-size/2, angleHeights[0], size/2),
+                 new Vector3(-size/2, angleHeights[1], -size/2),
+                 new Vector3(size/2, angleHeights[2], size/2),
+                 new Vector3(size/2, angleHeights[3], -size/2),
             };
         }
         else
         {
             vertices = new Vector3[]{
-                 new Vector3(-size/2, 0, 5f),
+                 new Vector3(-size/2, 0, 5f + angleHeights[0]),
                  new Vector3(-size/2, 0, -5f),
-                 new Vector3(size/2, 0, 5f),
+                 new Vector3(size/2, 0, 5f + angleHeights[2]),
                  new Vector3(size/2, 0, -5f),
             };
         }
@@ -144,7 +183,7 @@ public class Chunk : MonoBehaviour
         return face;
     }
 
-    private float GetHeightFromAngle(float angle, float size)
+    public float GetHeightFromAngle(float angle, float size)
     {
         return size / Mathf.Sin((180f - angle - 90f) * Mathf.Deg2Rad) * Mathf.Sin(angle * Mathf.Deg2Rad);
     }
